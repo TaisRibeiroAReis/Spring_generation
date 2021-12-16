@@ -6,22 +6,24 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.UpdateTimestamp;
 
-@Entity 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@Entity //create table
 @Table(name = "tb_postagens") 
 public class Postagem {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id; 
+	@GeneratedValue(strategy = GenerationType.IDENTITY) //autoincrement
+	private Long id;//é uma classe que atribui uma serie de metodos a esse objeto
 	
-	@NotBlank(message = "O atributo titulo é obrigatorio!") 
+	@NotNull(message = "O atributo titulo é obrigatorio!") 
 	@Size(min= 5, max=100,message = "O atributo titulo deve ter no minimo 5 e no maximo 100")
 	private String titulo;
 	
@@ -32,7 +34,31 @@ public class Postagem {
 	@UpdateTimestamp
 	private LocalDate data; 
 
-	public Long getId() {
+	@ManyToOne
+	@JsonIgnoreProperties("postagem")
+	private Tema tema;
+
+	public Tema getTema() {
+		return tema;
+	}
+
+	public void setTema(Tema tema) {
+		this.tema = tema;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+
+	@ManyToOne
+	@JsonIgnoreProperties("postagem")
+	private Usuario usuario;	
+	
+	public Long getId() { //long tras metodos
 		return id;
 	}
 
@@ -63,8 +89,4 @@ public class Postagem {
 	public void setData(LocalDate data) {
 		this.data = data;
 	}
-	
-	
-	
-
 }
